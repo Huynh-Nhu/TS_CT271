@@ -1,29 +1,21 @@
-const newRouter = require('./news');
-const registerRouter = require('./register');
-const siteRouter = require('./site');
-const logRouter = require('./login');
+const registerRouter = require('./adminregister');
+const logRouter = require('./adminlogin');
+const homeRouter = require('./adminhome');
+const userRouter = require('./userRoute');
+const productRouter = require('./productRouter');
+const caterogyRouter =  require('./caterogyRouter');
+const cartRouter = require('./cartRouter')
 
 
 function route(app){
-
-    app.use('/login', logRouter);
-    app.use('/news', newRouter);
+    // app.use('/category/:categoryID',productRouter),
+    app.use('/cart',cartRouter)
+    app.use('/category',caterogyRouter),
+    app.use('/product',productRouter),
+    app.use('/user',userRouter),
+    app.use('/login', logRouter),
     app.use('/reg', registerRouter),
-    app.use('/', siteRouter),
-
-
-
-    app.get('/search', (req, res) => {
-        res.render('search');
-        
-      })
-        
-      
-      app.post('/search', (req, res) => { 
-        console.log(req.body);
-        res.send('');
-        
-      })
+    app.use('/', homeRouter)
 }
 
 module.exports = route;

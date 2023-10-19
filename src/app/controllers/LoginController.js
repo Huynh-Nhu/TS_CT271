@@ -1,41 +1,40 @@
-// const User = require('../models/Users');
-
-
+const UserService = require("../services/userService")
+const User = require('../models/useModel');
+const ApiError = require('../api-error');
+const MongoDB = require('../util/mongodb');
+const bcrypt = require('bcrypt');
+const { response } = require("express");
 class LoginController {
-
-     async login (req,res){
+    async login(req, res) {    
         try {
-            const user = await User.findOne({name: req.body.name});
-            if (!user){
-                res.status(404).json('Wrong username');
-            }
-            const validPassword = await bcrypt.compare(
-                req.body.password,
-                user.password
-            
-            );
-            if (!validPassword) {
-                 res.status(404).json('Wrong password');
+            const { phone, password } = req.body;
+            // const 
+            // Retrieve user from database based on phone number
+            const userService = new UserService(MongoDB.client);
+            const user = await userService.findByPhone(phone);
+            console.log(user);
 
-            }
-            if(user && validPassword){
-            res.status(200).json(User);
-
-            }
-
-            
+            //Nếu người dùng không tồn tại hoặc mật khẩu không chính xác, hiển thị thông báo lỗi
+            if (!user || !(await bcrypt.compare(password, user.password))) {
+                const errorMessage = 'Số điện thoại hoặc mật khẩu không chính xác . Ban ne nhap lai';
+                res.status(400).json({ error: errorMessage } );
+                // return;
+            } else{
                 
+                    res.status(200).send(user)
+            }
+           
+                
+            
+           
+            
+        } catch(err) {
+            console.log(err);
+            // Handle error and render error page
+            // res.render('error', { error: 'An error occurred while logging in' });
         }
-        catch(err){
-            res.status(404).json(err.message);
-        }
-        
-        // res.render('login');
-        
-    }
-
-    
+    };
 }
- 
-//tạo ra một đối tượng và gửi ra ngoài 
+
+// tạo ra một đối tượng và gửi ra ngoài 
 module.exports = new LoginController;

@@ -1,0 +1,20 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Tên Khách Hàng </th>
+            <th scope="col">Số Điện Thoại</th>
+            <th scope="col">Password</th>
+
+
+        </tr>
+    </thead>
+    {{#each users}}
+    <tr>
+        <th scope="row">{{this.name}}</th>
+        <td>{{this.phone}}</td>
+        <td>{{this.password}}</td>
+    </tr>
+
+    {{/each}}
+    </tbody>
+</table>

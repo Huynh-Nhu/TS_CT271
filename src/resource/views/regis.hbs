@@ -1,33 +1,32 @@
-<div class="mt-4">
-    <div class="row">
-
-        <div class="">
-            <form action="/action_page.php" class="was-validated">
-                <div class="form-group">
-                    <label for="name">Username:</label>
-                    <input type="text" class="form-control" id="name" placeholder="Enter username" name="name" required>
-                    <div class="valid-feedback">Valid.</div>
-                    <div class="invalid-feedback">Please fill out this field.</div>
-                </div>
-                <div class="form-group">
-                    <label for="phone">Phone:</label>
-                    <input type="text" class="form-control" id="phome" placeholder="Enter username" name="phone" required>
-                    <div class="valid-feedback">Valid.</div>
-                    <div class="invalid-feedback">Please fill out this field.</div>
-                </div>
-
-                <div class="form-group">
-                    <label for="password">Password:</label>
-                    <input type="password" class="form-control" id="password" placeholder="Enter password" name="password" required>
-                    <div class="valid-feedback">Valid.</div>
-                    <div class="invalid-feedback">Please fill out this field.</div>
-                </div>
-            
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
-        </div>
-    
+<form action="/reg/create" class="was-validated" method="post">
+    <div class="form-group">
+        <label for="name">Username:</label>
+        <input type="text" class="form-control" id="name" name="name">
+        {{#each message.name}}
+        <div class="vail-feedback">{{this}}</div>
+        {{/each}}
     </div>
-    
-    
-</div>
+    <div class="form-group">
+        <label for="phone">Phone:</label>
+        <input type="text" class="form-control" id="phone" name="phone">
+        {{#each message.phone}}
+        <div class="vail-feedback">{{this}}</div>
+        {{/each}}
+    </div>
+    <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" class="form-control" id="password" name="password">
+        {{#each message.password}}
+        <div class="vail-feedback">{{this}}</div>
+        {{/each}}
+    </div>
+    {{#if message.errors}}
+    <div class="alert alert-danger" role="alert">
+        {{#each message.errors}}
+        <p>{{this}}</p>
+        {{/each}}
+    </div>
+    {{/if}}
+    <span class="d-block">{{message}}</span>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
