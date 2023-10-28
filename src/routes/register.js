@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 
 //nạp controller
-const registerAdminController =require('../app/controllers/AdminRegisterController');
+const registerController =require('../app/controllers/RegisterController');
 
-router.use('/create',registerAdminController.create); 
+router.use('/create',registerController.create); 
 
 
 

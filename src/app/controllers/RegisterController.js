@@ -4,6 +4,8 @@ const ApiError = require("../api-error");
 const bcrypt = require("bcrypt");
 const MongoDB = require("../util/mongodb");
 const { response } = require("express");
+const validator = require('validator')
+
 class RegisterController {
   createon(req, res) {
     res.send('register');
@@ -20,19 +22,24 @@ class RegisterController {
         phone: req.body.phone,
         password: hashed,
       });
-
+      console.log(newUser);
       if (!newUser.name || newUser.name.trim() === "") {
-        message = "Dien ten dang nhap";
+        message = "Vui Lòng Điền Tên Đăng Nhập";
         res.send(message);     
            return;
       }
       if (!newUser.phone || newUser.phone.trim() === "") {
-        message = "Dien so dien thoai";
+        message = "Vui Lòng Nhập Số Điện Thoại ";
         res.send(message)
         return;
-      } else if (!/^\d{10}$/.test(newUser.phone)) {
-        message = "So dien thoai gom 10 so";
+      } else if (!validator.isNumeric(newUser.phone) || newUser.phone.length !== 10) {
+        message = "Số Điện Thoại Phải Đủ 10 Số";
         res.send(message)
+        return;
+      }
+      if (!req.body.password || req.body.password.trim() === "") {
+        message = "Vui lòng nhập mật khẩu";
+        res.send(message);
         return;
       }
       const userService = new UserService(MongoDB.client);
@@ -40,12 +47,19 @@ class RegisterController {
       const userExists = await userService.findByPhone(newUser.phone);
 
       if (userExists) {
-        message = "Tai khoan da ton tai";
+        message = "Tài Khoản Này Đã Tồn Tại";
         res.send(message);
         return;
-      } else {
+      } 
+      
+      else if(!validator.isMobilePhone(newUser.phone,"vi-VN")){
+        message = "Số điện thoại không hợp lệ";
+        res.send(message);
+  
+      }
+       else {
         const document = await userService.create(newUser);
-        message = "Dang ky thanh cong";
+        message = "Đăng Ký Thành Công";
         res.send(message);
         console.log(document);
       }

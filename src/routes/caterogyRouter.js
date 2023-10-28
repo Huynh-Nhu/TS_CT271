@@ -9,7 +9,6 @@ const categoryController = require('../app/controllers/CaterogyController')
 router.use('/listCate',categoryController.show); 
 router.use('/create',categoryController.create); 
 router.use('/:id/products',categoryController.addProduct); 
-
 router.use('/:id',categoryController.getId); 
 
 

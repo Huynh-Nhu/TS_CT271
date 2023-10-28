@@ -108,7 +108,7 @@ class ProductController {
             const img = await imageService.updateProduct(productId.image, newImage);
             console.log(img);
             const filePath =
-              "D:/project_ct27110/Vue_User/public/img/products/" + newImage.name;
+              "D:/NL_CT27110/project_ct27110/Vue_User/public/img/products/" + newImage.name;
             imgProduct.mv(filePath);
               
             console.log("Product added successfully");
@@ -160,7 +160,7 @@ class ProductController {
       const productService = new ProductService(MongoDB.client);
       const result = await productService.addProduct(newProduct);
       const filePath = path.join(
-        "project_ct27110/Vue_User/src/public/img/products/" + newProduct.image
+        "D:/NL_CT27110/project_ct27110/Vue_User/public/img/products/"  + newProduct.image
       );
       imgProduct.image.mv(filePath);
       console.log("Product added successfully");

@@ -42,6 +42,7 @@ class CartController {
       console.log(err);
     }
   }
+  
   async delete(req, res){
     try{
       console.log(req.params.id);
@@ -54,6 +55,21 @@ class CartController {
       console.log(err);
     }
   }
+  async deleteAll(req, res) {
+    try{
+      console.log("idUser", req.params.id);
+      const cartService = new CartService(MongoDB.client);
+      const cart = await cartService.deleteAllCart(req.params.id);
+      // console.log(cart);
+      res.send({message:"Remove successfully"});
+
+    } catch(err){
+      console.log(err);
+    }
+  }
+  // async user(req, res){
+    
+  // }
 }
 
 module.exports = new CartController();

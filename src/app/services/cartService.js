@@ -52,6 +52,26 @@ class  CartService{
         return result;
     
       }
+      async deleteAllCart(idUser){
+        try{
+          console.log("name",idUser);
+          const user = await this.registerRouter.findOne({
+           idUser
+          });
+          if(!user){
+            throw new Error('Không tìm thấy người dùng')
+          }
+          const result = await this.registerRouter.deleteMany({
+            idUser
+  
+          });
+          return result;
+
+        } catch(err){
+          console.log(err);
+        }
+    
+      }
 }
 
 

@@ -41,23 +41,39 @@ class categoryController {
 
   async create(req, res) {
     var message = [];
+    const img = req.files.img;
+    console.log(img);
     try {
       const newCategory = new category({
         name: req.body.name,
+        img: img.name,
       });
-
-      const categoryService = new caterogyService(MongoDB.client);
-      const result = categoryService.create(newCategory);
-      const caterogyExists = await categoryService.findByName(newCategory.name);
-      console.log(caterogyExists);
-      if (caterogyExists) {
-        message = "da co loai san pham trong";
+      console.log(newCategory);
+      if (newCategory.name === "") {
+        message = "Vui lòng nhập tên loại sản phẩm";
         res.send(message);
-      }
-      message = "Them loai san pham moi thanh cong";
-      res.send(message);
+      } else {
+        const categoryService = new caterogyService(MongoDB.client);
+        const caterogyExists = await categoryService.findByName(
+          newCategory.name
+        );
 
-      res.send(result);
+        console.log(caterogyExists);
+        if (caterogyExists) {
+          message = "da co loai san pham trong";
+          res.send(message);
+        } else {
+          const result = await categoryService.addCate(newCategory);
+          console.log(result);
+          message = "Them loai san pham moi thanh cong";
+          res.send(message);
+          const filePath =
+            "D:/NL_CT27110/project_ct27110/Vue_User/public/img/products/" +
+            img.name;
+          img.mv(filePath);
+        }
+        // res.send(result);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -67,7 +83,7 @@ class categoryController {
     try {
       const categoryService = new caterogyService(MongoDB.client);
       const categoryId = await categoryService.findById(req.params.id);
-
+      console.log(req.body);
       const imgProduct = req.files.image;
       console.log("abc: ", imgProduct.name);
 
@@ -75,18 +91,19 @@ class categoryController {
         const newProduct = new Product({
           category: categoryId,
           name: req.body.name,
-          // image: req.body.image,
+          image: req.body.image,
           sizeS: req.body.sizeS,
           sizeM: req.body.sizeM,
           details: req.body.details,
         });
-        console.log("newproduct ", newProduct._id);
+        // console.log("newproduct ", newProduct._id);
 
         const productService = new ProductService(MongoDB.client);
         const result = await productService.addProduct(newProduct);
         console.log("id", result.value._id);
         const filePath =
-          "D:/project_ct27110/Vue_User/public/img/products/" + imgProduct.name;
+          "D:/NL_CT27110/project_ct27110/Vue_User/public/img/products/" +
+          imgProduct.name;
         imgProduct.mv(filePath);
         if (result.value._id) {
           const newImage = new Image({
@@ -95,8 +112,8 @@ class categoryController {
           });
           const imageService = new ImageService(MongoDB.client);
           const img = await imageService.create(newImage);
-          console.log(img.value);
-          
+          // console.log(img.value);
+
           newProduct.image = img.value._id;
           await productService.updateProduct(result.value._id, newProduct);
         }

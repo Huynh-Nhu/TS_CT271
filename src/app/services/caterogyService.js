@@ -10,9 +10,10 @@ class caterogyService{
       return  categories;
     }
     async findByName(name){
-      const category = await this.registerRouter.findOne({name});
+      const category = await this.registerRouter.findOne({
+        name :{ $regex: new RegExp(name), $options: "i" }
+      });
         return category;
-        console.log(category);
       }
 
 
@@ -23,9 +24,10 @@ class caterogyService{
     }
    
 
-    extractCaterogyFromDB(payload) {
+    extractCategoryFromDB(payload) {
         const caterogyModel = {
           name: payload.name,
+          img: payload.img
          
         };
         
@@ -36,7 +38,7 @@ class caterogyService{
       }
       
       async create(payload) {
-        const caterogy = this. extractCaterogyFromDB(payload);
+        const caterogy = this.extractCategoryFromDB(payload);
         console.log(caterogy);
         const result = await this.registerRouter.findOneAndUpdate(
             caterogy,
@@ -46,6 +48,15 @@ class caterogyService{
         return result;
         // console.log(result);
       };
+      async addCate(payload) {
+        const categoryDocument =  this.extractCategoryFromDB(payload);
+        const result = await this.registerRouter.findOneAndUpdate(
+          { name: categoryDocument.name },
+          { $set: categoryDocument },
+          { returnDocument: "after", upsert: true, maxTimeMS: 30000 }
+        );
+        return result;
+      }
 }
 
 module.exports = caterogyService;

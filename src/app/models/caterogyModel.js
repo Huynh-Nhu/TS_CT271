@@ -7,6 +7,10 @@ const categorySchema = new Schema({
     required: true,
     description: "Tên loại sản phẩm",
   },
+  img:{
+    type: String,
+    require: true,
+  }
 });
 
 const Category = mongoose.model("Category", categorySchema);
