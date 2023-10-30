@@ -11,6 +11,9 @@ const orderSchema = new Schema ({
    dayOrder:{
     type: String
    },
+   dayCurrent:{
+      type: String
+   },
    status:{
     type: String,
     enum:['Pending', 'Completed'],

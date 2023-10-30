@@ -7,7 +7,6 @@ const Product = require("../models/productModel");
 const MongoDB = require("../util/mongodb");
 const path = require("path");
 const root = require("app-root-path");
-const { response } = require("express");
 const { log } = require("console");
 // const upload = require('../util/upload'); // If you're not using this here, consider removing it.
 
@@ -68,9 +67,7 @@ class ProductController {
       res.send(req.body, { mesaage: "Data to update can not be empty" });
     }
     try {
-      // const categoryService = new caterogyService(MongoDB.client);
-      // const categoryId = await categoryService.findById(req.params.id);
-      // if (categoryId) {
+      
       const productService = new ProductService(MongoDB.client);
       const document = await productService.updateProduct(
         req.params.id,
@@ -82,11 +79,7 @@ class ProductController {
       console.log(err);
     }
   }
-  // async getId(req, res) {
-  //   const getService = new ImageService(MongoDB.client);
-  //   const imageId = await getService.getById(rw);
-  //   console.log(imageId);
-  // }
+ 
   async updateImage(req, res) {
     if ((Object.keys(req.body).length = 0)) {
       res.send(req.body, { mesaage: "Data to update can not be empty" });
@@ -168,6 +161,19 @@ class ProductController {
     } catch (err) {
       console.log(err);
       res.status(500).send("There was an error adding the product."); // Provide feedback to the user
+    }
+  }
+  async searchProducts(req, res){
+    try{
+     const { productName} = req.body
+     console.log(productName);
+      const productService = new ProductService(MongoDB.client);
+      const searchProduct = await productService.searchProduct({name:productName})
+      res.send(searchProduct)
+      console.log(searchProduct);
+    }catch(err){
+      
+      console.log(err);
     }
   }
 }

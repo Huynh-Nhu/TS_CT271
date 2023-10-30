@@ -10,6 +10,12 @@ class ProductService {
     const products = await this.registerRouter.find().toArray();
     return products;
   }
+  async searchProduct(name){
+    const product = await this.registerRouter.findOne({
+      name :{ $regex: new RegExp(name), $options: "i" }
+    });
+      return product;
+  }
   async getOneProduct(id){
     return await this.registerRouter.findOne({
       _id: ObjectId.isValid(id) ? new ObjectId(id) :null,

@@ -7,9 +7,7 @@ const { response } = require("express");
 const validator = require('validator')
 
 class RegisterController {
-  createon(req, res) {
-    res.send('register');
-  }
+ 
   async create(req, res, next) {
     var message = "";
 

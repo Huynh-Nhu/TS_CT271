@@ -10,6 +10,7 @@ class orderService {
     const orderModel = {
       idUser: payload.idUser,
       dayOrder: payload.dayOrder,
+      dayCurrent: payload.dayCurrent,
       status: payload.status,
     };
 
@@ -38,11 +39,11 @@ class orderService {
       _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
     });
   }
-  async updateOrder(id, status) {
+  async updateOrder(id, status, dayCurrent) {
     const filter = {
       _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
     };
-    const updateOrder = this.extractOrderFromDB(status);
+    const updateOrder = this.extractOrderFromDB(status, dayCurrent);
     
     const result = await this.registerRouter.findOneAndUpdate(
       filter,
