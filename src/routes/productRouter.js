@@ -6,7 +6,7 @@ const ProductController = require('../app/controllers/ProductController');
 // // router.use('/caterogy', ProductController.addCaterogy);
 // router.use('/test', ProductController.getId);
 
-router.use('/search', ProductController.searchProducts)
+// router.use('/search', ProductController.searchProducts)
 router.use('/products', ProductController.addProduct);
 router.use('/img',ProductController.showImage);
 router.use('/home', ProductController.show);

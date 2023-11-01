@@ -3,15 +3,23 @@ const CartService = require("../services/cartService");
 const Cart = require("../models/cartModel");
 
 class CartController {
-
   async addCart(req, res) {
     try {
-      const {idUser, idProduct, name, image, size, quantity, priceSize, price, note } =
-        req.body;
+      const {
+        idUser,
+        idProduct,
+        name,
+        image,
+        size,
+        quantity,
+        priceSize,
+        price,
+        note,
+      } = req.body;
 
       const newCart = new Cart({
         idUser,
-        idProduct, 
+        idProduct,
         name,
         image,
         size,
@@ -28,48 +36,48 @@ class CartController {
     }
   }
   async showCart(req, res) {
-    try{
+    try {
       const cartService = new CartService(MongoDB.client);
       const cart = cartService.getAll();
-      cart.then(function(carts){
+      cart.then(function (carts) {
         res.send(carts);
       });
-      cart.catch(function(err){
+      cart.catch(function (err) {
         console.log(err);
-      })
-
-    } catch(err){
+      });
+    } catch (err) {
       console.log(err);
     }
   }
-  
-  async delete(req, res){
-    try{
+
+  async delete(req, res) {
+    try {
       console.log(req.params.id);
       const cartService = new CartService(MongoDB.client);
       const cart = await cartService.delete(req.params.id);
 
       // const deleteCart = cartService.delete()
-      res.send({message:"Remove successfully"});
-    } catch(err){
+      res.send({ message: "Remove successfully" });
+    } catch (err) {
       console.log(err);
     }
   }
   async deleteAll(req, res) {
-    try{
+    try {
       console.log("idUser", req.params.id);
       const cartService = new CartService(MongoDB.client);
       const cart = await cartService.deleteAllCart(req.params.id);
       // console.log(cart);
-      res.send({message:"Remove successfully"});
-
-    } catch(err){
+      res.send({ message: "Remove successfully" });
+    } catch (err) {
       console.log(err);
     }
   }
-  // async user(req, res){
-    
-  // }
+  async updateCart(req, res) {
+    const cartService = new CartService(MongoDB.client);
+    const cart = await cartService.updateCart(req.params.id, req.body);
+    res.send(cart);
+  }
 }
 
 module.exports = new CartController();
