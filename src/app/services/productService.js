@@ -51,6 +51,7 @@ class ProductService {
       sizeS: payload.sizeS,
       sizeM: payload.sizeM,
       details: payload.details,
+      status: payload.status
     };
     console.log(productModel);
     Object.keys(productModel).forEach(
@@ -62,7 +63,7 @@ class ProductService {
     const products = this.extractProductData(payload);
     const result = await this.registerRouter.findOneAndUpdate(
       products,
-      { $set: products },
+      { $set: {status: products.status === true} },
       { returnDocument: "after", upsert: true, maxTimeMS: 30000 }
     );
     return result;

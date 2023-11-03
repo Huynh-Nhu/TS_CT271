@@ -62,7 +62,7 @@ class OrderController {
 
         const matchingOrderDetails = [];
         for (const detail of orderDetail) {
-          if (detail.idOrder.toString() === order._id.toString()) {
+          if (detail.idOrder.toString() === order._id?.toString()) {
             const productService = new ProductService(MongoDB.client);
             const product = await productService.getOneProduct(
               detail.idProduct

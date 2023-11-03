@@ -1,6 +1,9 @@
 const MongoDB = require("../util/mongodb");
 const CartService = require("../services/cartService");
+const ProductService = require("../services/productService");
 const Cart = require("../models/cartModel");
+const Product = require("../models/productModel");
+
 
 class CartController {
   async addCart(req, res) {
@@ -38,13 +41,30 @@ class CartController {
   async showCart(req, res) {
     try {
       const cartService = new CartService(MongoDB.client);
-      const cart = cartService.getAll();
-      cart.then(function (carts) {
-        res.send(carts);
-      });
-      cart.catch(function (err) {
-        console.log(err);
-      });
+      const cart = await cartService.getAll();
+  
+      const productService = new ProductService(MongoDB.client);
+      const products = {}; // Khởi tạo đối tượng trống để lưu trữ thông tin sản phẩm
+  
+      const updatedCart = await Promise.all(
+        cart.map(async function (cartItem) {
+          if (!products[cartItem.idProduct]) {
+            // Kiểm tra xem thông tin sản phẩm đã được lấy chưa
+            const product = await productService.getOneProduct(cartItem.idProduct);
+            products[cartItem.idProduct] = product; // Lưu trữ thông tin sản phẩm
+          }
+  
+          const updatedCartItem = {
+            ...cartItem,
+            status: products[cartItem.idProduct].status, // Gán thuộc tính "status" từ sản phẩm tương ứng
+          };
+  
+          return updatedCartItem;
+        })
+      );
+  
+      console.log(updatedCart);
+      res.send(updatedCart);
     } catch (err) {
       console.log(err);
     }

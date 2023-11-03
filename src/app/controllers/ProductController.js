@@ -162,32 +162,62 @@ class ProductController {
     }
   }
 
+  // async deleteProduct(req, res) {
+  //   try {
+  //     const productService = new ProductService(MongoDB.client);
+  //     const productId = await productService.getOneProduct(req.params.id);
+  //     if(productId){
+  //       const cartService = new CartService(MongoDB.client);
+  //       const carts = await cartService.getAll();
+  //       for(const cart of carts){
+  //         const cartRemove = await cartService.delete(cart._id);
+          
+  //       }
+  //     }
+
+  //     if (productId) {
+  //       const imageService = new ImageService(MongoDB.client);
+  //       const image = await imageService.deleteImage(productId.image);
+  //     }
+  //     const deleteProduct = productService.delete(req.params.id);
+  //     if (!deleteProduct) {
+  //       res.send({ mesaage: "Delete Product not found" });
+  //     }
+  //     res.send({ mesaage: "Product deleted successfully" });
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }
+
   async deleteProduct(req, res) {
     try {
       const productService = new ProductService(MongoDB.client);
       const productId = await productService.getOneProduct(req.params.id);
+      console.log("lấy all sản phẩm",productId.status);
       if(productId){
-        const cartService = new CartService(MongoDB.client);
-        const carts = await cartService.getAll();
-        for(const cart of carts){
-          const cartRemove = await cartService.delete(cart._id);
-
-        }
+        
+          
+          const newProduct = new Product({
+            ...productId,
+            status: false
+          })
+          const document = await productService.updateProduct(productId._id,newProduct);
+          console.log(document);
+        
       }
 
-      if (productId) {
-        const imageService = new ImageService(MongoDB.client);
-        const image = await imageService.deleteImage(productId.image);
-      }
-      const deleteProduct = productService.delete(req.params.id);
-      if (!deleteProduct) {
-        res.send({ mesaage: "Delete Product not found" });
-      }
+      // if (productId) {
+      //   const imageService = new ImageService(MongoDB.client);
+      //   const image = await imageService.deleteImage(productId.image);
+      // }
+      // const deleteProduct = productService.delete(req.params.id);
+      
       res.send({ mesaage: "Product deleted successfully" });
     } catch (err) {
       console.log(err);
     }
   }
+  
 
   async addProduct(req, res) {
     const imgProduct = req.files;

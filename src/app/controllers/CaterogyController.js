@@ -83,9 +83,9 @@ class categoryController {
     try {
       const categoryService = new caterogyService(MongoDB.client);
       const categoryId = await categoryService.findById(req.params.id);
-      console.log(req.body);
+      // console.log(req.body);
       const imgProduct = req.files.image;
-      console.log("abc: ", imgProduct.name);
+      // console.log("abc: ", imgProduct.name);
 
       if (categoryId) {
         const newProduct = new Product({
@@ -100,7 +100,7 @@ class categoryController {
 
         const productService = new ProductService(MongoDB.client);
         const result = await productService.addProduct(newProduct);
-        console.log("id", result.value._id);
+        // console.log("id", result.value._id);
         const filePath =
           "D:/NL_CT27110/project_ct27110/Vue_User/public/img/products/" +
           imgProduct.name;

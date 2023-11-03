@@ -34,20 +34,10 @@ const productSchema = new Schema({
     type: String,
     require: true,
   },
-  toppings: [
-    {
-      name: {
-        type: String,
-        required: true,
-        description: "Tên của topping",
-      },
-      price: {
-        type: Number,
-        required: true,
-        description: "Giá tiền của topping",
-      },
-    },
-  ],
+  status:{
+    type: Boolean,
+    default: true
+  }
 });
 
 const Product = mongoose.model("Product", productSchema);
