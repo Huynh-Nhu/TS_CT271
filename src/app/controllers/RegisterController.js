@@ -20,7 +20,6 @@ class RegisterController {
         phone: req.body.phone,
         password: hashed,
       });
-      console.log(newUser);
       if (!newUser.name || newUser.name.trim() === "") {
         message = "Vui Lòng Điền Tên Đăng Nhập";
         res.send(message);     
@@ -37,6 +36,11 @@ class RegisterController {
       }
       if (!req.body.password || req.body.password.trim() === "") {
         message = "Vui lòng nhập mật khẩu";
+        res.send(message);
+        return;
+      }
+      if(req.body.password.length < 8){
+        message = " Pass phải có ít nhất 8 ký tư"
         res.send(message);
         return;
       }

@@ -3,13 +3,9 @@ const OrderDetailService = require("../services/orderDetailService");
 const Order = require("../models/orderModel");
 const OrderDetail = require("../models/orderDetail");
 const UserService = require("../services/userService");
-// const Product = require("../models/productModel");
 const ProductService = require("../services/productService");
 const MongoDB = require("../util/mongodb");
 const ImageService = require("../services/imageService");
-
-const { response } = require("express");
-
 class OrderController {
   async addOrder(req, res) {
     try {
@@ -50,8 +46,6 @@ class OrderController {
     try {
       const orderService = new OrderService(MongoDB.client);
       const orders = await orderService.getAllOrder();
-      // const  user =
-
       const orderData = [];
       for (const order of orders) {
         const userService = new UserService(MongoDB.client);
@@ -72,16 +66,13 @@ class OrderController {
               ...detail,
               product,
             });
-            // console.log(matchingOrderDetails);
           }
         }
-        // console.log(user);
         orderData.push({
           order: order,
           user: user,
           orderDetail: matchingOrderDetails,
         });
-        // console.log(orderData);
       }
 
       res.send(orderData);
@@ -94,11 +85,10 @@ class OrderController {
       res.send(req.body, { mesaage: "Data to update can not be empty" });
     }
     try {
-      // const {status} = req.body
       const orderService = new OrderService(MongoDB.client);
       const document = await orderService.updateOrder(req.params.id, req.body);
       res.send(document);
-      // }
+      
     } catch (err) {
       console.log(err);
     }
@@ -107,17 +97,12 @@ class OrderController {
     try { 
       const productService = new ProductService(MongoDB.client);
       const product = await productService.getOneProduct(req.params.id);
-      // console.log("prodct",product);
-      // res.send(product);
-      
       if (product.image) {
         const imageService = new ImageService(MongoDB.client);
         const img = await imageService.getImage(product.image);
         console.log(img);
         product.imageData= img.name;
       }
-      
-      
       res.send(product);
       console.log(product);
     } catch (err) {

@@ -1,4 +1,4 @@
-const caterogy = require('../models/caterogyModel');
+const caterogy = require('../models/categoryModel');
 const {ObjectId} = require("mongodb")
 
 class caterogyService{

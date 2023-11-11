@@ -1,16 +1,12 @@
 const ProductService = require("../services/productService");
-const caterogyService = require("../services/caterogyService");
 const ImageService = require("../services/imageService");
 const Image = require("../models/imgModel");
 const Cart = require("../models/cartModel");
 const CartService = require("../services/cartService");
-
 const Product = require("../models/productModel");
 const MongoDB = require("../util/mongodb");
 const path = require("path");
-const root = require("app-root-path");
-const { log } = require("console");
-// const upload = require('../util/upload'); // If you're not using this here, consider removing it.
+const config = require("../config")
 
 class ProductController {
   show(req, res) {
@@ -26,8 +22,6 @@ class ProductController {
     } catch (err) {
       console.log(err);
     }
-
-    // res.render('listProduct');
   }
   showImage(req, res) {
     try {
@@ -48,12 +42,10 @@ class ProductController {
     try {
       const productService = new ProductService(MongoDB.client);
       const product = await productService.getOneProduct(req.params.id);
-      // console.log(product);
-      // res.send(product);
+    
       if (product.image) {
         const imageService = new ImageService(MongoDB.client);
         const img = await imageService.getImage(product.image);
-        // console.log(img);
         product.imageData = img.name;
       }
 
@@ -143,14 +135,8 @@ class ProductController {
         });
         const imageService = new ImageService(MongoDB.client);
         const img = await imageService.updateProduct(productId.image, newImage);
-
-        
-
-
-
-        
         const filePath =
-          "D:/NL_CT27110/project_ct27110/Vue_User/public/img/products/" +
+          config.filePath.product +
           newImage.name;
         imgProduct.mv(filePath);
 
@@ -161,33 +147,6 @@ class ProductController {
       console.log(err);
     }
   }
-
-  // async deleteProduct(req, res) {
-  //   try {
-  //     const productService = new ProductService(MongoDB.client);
-  //     const productId = await productService.getOneProduct(req.params.id);
-  //     if(productId){
-  //       const cartService = new CartService(MongoDB.client);
-  //       const carts = await cartService.getAll();
-  //       for(const cart of carts){
-  //         const cartRemove = await cartService.delete(cart._id);
-          
-  //       }
-  //     }
-
-  //     if (productId) {
-  //       const imageService = new ImageService(MongoDB.client);
-  //       const image = await imageService.deleteImage(productId.image);
-  //     }
-  //     const deleteProduct = productService.delete(req.params.id);
-  //     if (!deleteProduct) {
-  //       res.send({ mesaage: "Delete Product not found" });
-  //     }
-  //     res.send({ mesaage: "Product deleted successfully" });
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }
 
   async deleteProduct(req, res) {
     try {
@@ -205,13 +164,6 @@ class ProductController {
           console.log(document);
         
       }
-
-      // if (productId) {
-      //   const imageService = new ImageService(MongoDB.client);
-      //   const image = await imageService.deleteImage(productId.image);
-      // }
-      // const deleteProduct = productService.delete(req.params.id);
-      
       res.send({ mesaage: "Product deleted successfully" });
     } catch (err) {
       console.log(err);
@@ -219,33 +171,31 @@ class ProductController {
   }
   
 
-  async addProduct(req, res) {
-    const imgProduct = req.files;
-    // const categoryId = req.params.categoryId
-    const newProduct = new Product({
-      // category: categoryId,
-      name: req.body.name,
-      image: imgProduct.image.name,
-      sizeS: req.body.sizeS,
-      sizeM: req.body.sizeM,
-      details: req.body.details, // Fixed typo here
-    });
-    console.log(newProduct);
-    try {
-      const productService = new ProductService(MongoDB.client);
-      const result = await productService.addProduct(newProduct);
-      const filePath = path.join(
-        "D:/NL_CT27110/project_ct27110/Vue_User/public/img/products/" +
-          newProduct.image
-      );
-      imgProduct.image.mv(filePath);
-      console.log("Product added successfully");
-      res.redirect("/product/home");
-    } catch (err) {
-      console.log(err);
-      res.status(500).send("There was an error adding the product."); // Provide feedback to the user
-    }
-  }
+  // async addProduct(req, res) {
+  //   const imgProduct = req.files;
+  //   const newProduct = new Product({
+  //     name: req.body.name,
+  //     image: imgProduct.image.name,
+  //     sizeS: req.body.sizeS,
+  //     sizeM: req.body.sizeM,
+  //     details: req.body.details, // Fixed typo here
+  //   });
+  //   console.log(newProduct);
+  //   try {
+  //     const productService = new ProductService(MongoDB.client);
+  //     const result = await productService.addProduct(newProduct);
+  //     const filePath = path.join(
+  //       "D:/NL_CT27110/project_ct27110/Vue_User/public/img/products/" +
+  //         newProduct.image
+  //     );
+  //     imgProduct.image.mv(filePath);
+  //     console.log("Product added successfully");
+  //     res.redirect("/product/home");
+  //   } catch (err) {
+  //     console.log(err);
+  //     res.status(500).send("There was an error adding the product."); // Provide feedback to the user
+  //   }
+  // }
 }
 
 module.exports = new ProductController();

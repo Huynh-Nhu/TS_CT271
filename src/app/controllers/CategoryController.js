@@ -1,14 +1,11 @@
-const caterogyService = require("../services/caterogyService");
+const caterogyService = require("../services/categoryService");
 const ProductService = require("../services/productService");
 const ImageService = require("../services/imageService");
 const Product = require("../models/productModel");
 const Image = require("../models/imgModel");
-const root = require("app-root-path");
-const path = require("path");
-
-const category = require("../models/caterogyModel");
+const config = require("../config")
+const category = require("../models/categoryModel");
 const MongoDB = require("../util/mongodb");
-const { log } = require("console");
 
 class categoryController {
   show(req, res) {
@@ -42,7 +39,6 @@ class categoryController {
   async create(req, res) {
     var message = [];
     const img = req.files.img;
-    console.log(img);
     try {
       const newCategory = new category({
         name: req.body.name,
@@ -58,19 +54,19 @@ class categoryController {
           newCategory.name
         );
 
-        console.log(caterogyExists);
+        // console.log(caterogyExists);
         if (caterogyExists) {
-          message = "da co loai san pham trong";
+          message = "Đã có loại sản phẩm này";
           res.send(message);
         } else {
           const result = await categoryService.addCate(newCategory);
           console.log(result);
           message = "Them loai san pham moi thanh cong";
           res.send(message);
-          const filePath =
-            "D:/NL_CT27110/project_ct27110/Vue_User/public/img/products/" +
-            img.name;
-          img.mv(filePath);
+         const filePath = config.filePath.product + img.name;
+         img.mv(filePath)
+
+
         }
         // res.send(result);
       }
@@ -80,6 +76,7 @@ class categoryController {
   }
 
   async addProduct(req, res) {
+    var message = "";
     try {
       const categoryService = new caterogyService(MongoDB.client);
       const categoryId = await categoryService.findById(req.params.id);
@@ -102,7 +99,7 @@ class categoryController {
         const result = await productService.addProduct(newProduct);
         // console.log("id", result.value._id);
         const filePath =
-          "D:/NL_CT27110/project_ct27110/Vue_User/public/img/products/" +
+          config.filePath.product +
           imgProduct.name;
         imgProduct.mv(filePath);
         if (result.value._id) {
@@ -119,7 +116,8 @@ class categoryController {
         }
 
         console.log("Product added successfully");
-        res.send({ message: "Success" });
+        message = "Thêm sản phẩm tành công"
+        res.send(message);
       } else {
         res.status(404).json({ message: "khong co loai san pham nay" });
       }

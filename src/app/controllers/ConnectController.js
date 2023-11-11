@@ -1,7 +1,7 @@
 const MongoDB = require("../util/mongodb");
 const ConnectService = require("../services/connectService");
 const UserService = require("../services/userService");
-const path = require("path");
+const config = require("../config")
 const Connect = require("../models/connectModel");
 
 class ConnectController {
@@ -30,7 +30,7 @@ class ConnectController {
     const connect = await connectService.newConnect(newConnect);
 
     const filePath =
-      "D:/NL_CT27110/project_ct27110/Vue_User/public/img/Comment/";
+      config.filePath.comment;
 
     for (let i = 0; i < fileImages.length; i++) {
       const imageFile = fileImages[i];

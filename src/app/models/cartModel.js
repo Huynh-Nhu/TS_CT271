@@ -3,10 +3,14 @@ const Schema = mongoose.Schema;
 
 const cartSchema = new Schema ({
     idUser:{
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        require:true,
     },
     idProduct:{
-        type: String,
+        type: String,  type:Schema.Types.ObjectId,
+        ref:"Product",
+        require: true
     },
     name:{
         type: String,
