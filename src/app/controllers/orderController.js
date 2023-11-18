@@ -10,6 +10,7 @@ class OrderController {
   async addOrder(req, res) {
     try {
       const { idUser, dayOrder, status, orderDetails } = req.body;
+      // kiểm tra xem orderDetail có phải là một mảng không nếu k phải thì tạo 1 mãng mới và gán cho biến 
       const orderDetailsArray = Array.isArray(orderDetails)
         ? orderDetails
         : [orderDetails];
@@ -21,9 +22,8 @@ class OrderController {
       });
       const orderService = new OrderService(MongoDB.client);
       const order = await orderService.create(newOrder);
-      console.log(order);
-
       for (const orderDetail of orderDetailsArray) {
+        // trích xuất các thuộc tính từ mỗi phần tử orderDetailsArray.
         const { idProduct, quantityProduct, priceAll, localUser, note } =
           orderDetail;
         const newOrderDetail = new OrderDetail({
@@ -53,15 +53,16 @@ class OrderController {
 
         const orderDetailService = new OrderDetailService(MongoDB.client);
         const orderDetail = await orderDetailService.getAllOrderDetail();
-
+        // Tạo một mảng rỗng matchingOrderDetails để chứa các chi tiết đơn hàng tương ứng với đơn hàng hiện tại.
         const matchingOrderDetails = [];
         for (const detail of orderDetail) {
+          // 
           if (detail.idOrder.toString() === order._id?.toString()) {
             const productService = new ProductService(MongoDB.client);
             const product = await productService.getOneProduct(
               detail.idProduct
             );
-
+            // thêm đối tượng mới vào mảng
             matchingOrderDetails.push({
               ...detail,
               product,
@@ -86,6 +87,7 @@ class OrderController {
     }
     try {
       const orderService = new OrderService(MongoDB.client);
+      // Cập nhật lại trạng thái đơn hàng khi bấm xác nhận và thời gian
       const document = await orderService.updateOrder(req.params.id, req.body);
       res.send(document);
       
@@ -104,7 +106,6 @@ class OrderController {
         product.imageData= img.name;
       }
       res.send(product);
-      console.log(product);
     } catch (err) {
       console.log(err);
     }

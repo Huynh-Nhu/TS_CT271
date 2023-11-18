@@ -38,7 +38,6 @@ class AdminRegisterController {
         const admin = await adminService.create(newUser)
         message = "Đăng Ký Thành Công";
         res.send(message);
-        // res.send(admin);
 
     }
     } catch (err) {

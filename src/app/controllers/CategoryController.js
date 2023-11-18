@@ -14,7 +14,6 @@ class categoryController {
       const listCategories = categoryService.getAllCategory();
       listCategories.then(function (categories) {
         res.send(categories);
-        // console.log(categories);
       });
       listCategories.catch(function (err) {
         res.send(err);
@@ -28,9 +27,7 @@ class categoryController {
     try {
       const categoryService = new caterogyService(MongoDB.client);
       const idCategories = await categoryService.findById(req.params.id);
-      // const categoryName = await categoryService.findByName(idCategories)
       res.send(idCategories);
-      console.log(idCategories);
     } catch (err) {
       console.log(err);
     }
@@ -44,7 +41,6 @@ class categoryController {
         name: req.body.name,
         img: img.name,
       });
-      console.log(newCategory);
       if (newCategory.name === "") {
         message = "Vui lòng nhập tên loại sản phẩm";
         res.send(message);
@@ -53,14 +49,11 @@ class categoryController {
         const caterogyExists = await categoryService.findByName(
           newCategory.name
         );
-
-        // console.log(caterogyExists);
         if (caterogyExists) {
           message = "Đã có loại sản phẩm này";
           res.send(message);
         } else {
           const result = await categoryService.addCate(newCategory);
-          console.log(result);
           message = "Them loai san pham moi thanh cong";
           res.send(message);
          const filePath = config.filePath.product + img.name;
@@ -68,7 +61,7 @@ class categoryController {
 
 
         }
-        // res.send(result);
+        res.send(result);
       }
     } catch (err) {
       console.log(err);
@@ -80,10 +73,7 @@ class categoryController {
     try {
       const categoryService = new caterogyService(MongoDB.client);
       const categoryId = await categoryService.findById(req.params.id);
-      // console.log(req.body);
       const imgProduct = req.files.image;
-      // console.log("abc: ", imgProduct.name);
-
       if (categoryId) {
         const newProduct = new Product({
           category: categoryId,
@@ -93,11 +83,8 @@ class categoryController {
           sizeM: req.body.sizeM,
           details: req.body.details,
         });
-        // console.log("newproduct ", newProduct._id);
-
         const productService = new ProductService(MongoDB.client);
         const result = await productService.addProduct(newProduct);
-        // console.log("id", result.value._id);
         const filePath =
           config.filePath.product +
           imgProduct.name;
@@ -109,8 +96,6 @@ class categoryController {
           });
           const imageService = new ImageService(MongoDB.client);
           const img = await imageService.create(newImage);
-          // console.log(img.value);
-
           newProduct.image = img.value._id;
           await productService.updateProduct(result.value._id, newProduct);
         }

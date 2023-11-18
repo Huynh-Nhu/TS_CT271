@@ -50,7 +50,6 @@ class ProductController {
       }
 
       res.send(product);
-      // console.log(product);
     } catch (err) {
       console.log(err);
     }
@@ -66,15 +65,14 @@ class ProductController {
         req.params.id,
         req.body
       );
+      // Nếu update sản phẩm thì thay đổi lại trong cart 
       if (document) {
         const cartService = new CartService(MongoDB.client);
         const carts = await cartService.getAll();
-        
-        
-        const updatedCarts = [];
+
+        const updatedCarts = []; // tạo mãng rỗng lưu giỏ hàng
         let priceSizes= 0;
         for (const cart of carts) {
-          console.log(cart);
           console.log(document.value._id);
           if (cart.idProduct == document.value._id) {
             switch(cart.size){
@@ -97,20 +95,17 @@ class ProductController {
               price: priceSizes * cart.quantity ,
               note: cart.note,
             });
-            console.log(newcart);
             const updatedCart = await cartService.updateCart(cart._id, newcart);
-            updatedCarts.push(updatedCart);
-            console.log(updatedCart);
+            updatedCarts.push(updatedCart); // đưa kết quả update vào mãng đã tạo ở trên
           }
         }
 
         if (updatedCarts.length > 0) {
-          console.log("Updated carts:", updatedCarts);
+          console.log("Updated carts:", updatedCarts); // kiểm tra có phần tử naò được cập nhật không , có thì in ra cùng vối danh sách 
         }
       }
 
       res.send({ message: "Updated product successfully" });
-      // }
     } catch (err) {
       console.log("loi", err);
     }
@@ -120,12 +115,9 @@ class ProductController {
     if ((Object.keys(req.body).length = 0)) {
       res.send(req.body, { mesaage: "Data to update can not be empty" });
     }
-
-    // console.log("id img",req.params.id);
     try {
       const productService = new ProductService(MongoDB.client);
-      const productId = await productService.getOneProduct(req.params.id);
-      //  console.log("phhhh",productId.image);
+      const productId = await productService.getOneProduct(req.params.id); // tìm id sản phẩm
       if (productId) {
         const imgProduct = req.files.image;
         const newImage = new Image({
@@ -135,12 +127,11 @@ class ProductController {
         });
         const imageService = new ImageService(MongoDB.client);
         const img = await imageService.updateProduct(productId.image, newImage);
+       // lưu ảnh vào thư mục
         const filePath =
           config.filePath.product +
           newImage.name;
-        imgProduct.mv(filePath);
-
-        // console.log("Product added successfully");
+        imgProduct.mv(filePath); // di chuyển tệp ảnh tới đương dẵn đã định
         res.send({ message: "Success" });
       }
     } catch (err) {
@@ -152,17 +143,13 @@ class ProductController {
     try {
       const productService = new ProductService(MongoDB.client);
       const productId = await productService.getOneProduct(req.params.id);
-      console.log("lấy all sản phẩm",productId.status);
       if(productId){
-        
-          
           const newProduct = new Product({
-            ...productId,
+            ...productId, // sao chép các thuộc tính qua đối tượng mới
             status: false
           })
-          const document = await productService.updateProduct(productId._id,newProduct);
-          console.log(document);
-        
+          const document = await productService.updateProduct(productId._id,newProduct); // cập nhật lại trang thái thay vì xóa trong CSDL
+         
       }
       res.send({ mesaage: "Product deleted successfully" });
     } catch (err) {

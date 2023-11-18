@@ -35,13 +35,13 @@ class ProductService {
     );
     return result;
   }
-  async delete(id){
-    const result = await this.registerRouter.findOneAndDelete({
-      _id: ObjectId.isValid(id) ? new ObjectId(id) :null,
-    });
-    return result;
+  // async delete(id){
+  //   const result = await this.registerRouter.findOneAndDelete({
+  //     _id: ObjectId.isValid(id) ? new ObjectId(id) :null,
+  //   });
+  //   return result;
 
-  }
+  // }
 
   extractProductData(payload) {
     const productModel = {

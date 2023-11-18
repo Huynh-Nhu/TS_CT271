@@ -6,9 +6,8 @@ class UserController {
 
     ListUsers(req,res){
         try{
-
             const userService = new UserService(MongoDB.client);
-            const listUser = userService.getAllUsers();
+            const listUser = userService.getAllUsers(); // lấy danh sách khách hàng
             listUser.then(function(users){
                 res.send(users);
             });

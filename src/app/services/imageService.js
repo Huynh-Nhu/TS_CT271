@@ -18,16 +18,11 @@ class imageService {
   async getImageOne(nameProduct) {
     const image = await this.registerRouter.findOne({ nameProduct });
     return image;
-    console.log(image);
   }
   async getById(id) {
     return await this.registerRouter.findOne({
       _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
     });
-    // const img = await this.registerRouter.findOne({
-    //   _id: new ObjectId(id
-    // })
-    // return id;
   }
   async deleteImage(id){
     const result = await this.registerRouter.findOneAndDelete({
@@ -70,7 +65,6 @@ class imageService {
       { returnDocument: "after", upsert: true, maxTimeMS: 30000 }
     );
     return result;
-    console.log(result);
   }
 }
 

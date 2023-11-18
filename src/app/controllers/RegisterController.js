@@ -13,7 +13,7 @@ class RegisterController {
 
     try {
       const salt = await bcrypt.genSalt(10);
-      const hashed = await bcrypt.hash(req.body.password, salt);
+      const hashed = await bcrypt.hash(req.body.password, salt); // mã hóa mật khẩu
 
       const newUser = new User({
         name: req.body.name,
