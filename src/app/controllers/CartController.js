@@ -62,8 +62,6 @@ class CartController {
           return updatedCartItem;
         })
       );
-  
-      console.log(updatedCart);
       res.send(updatedCart);
     } catch (err) {
       console.log(err);
@@ -75,8 +73,6 @@ class CartController {
       console.log(req.params.id);
       const cartService = new CartService(MongoDB.client);
       const cart = await cartService.delete(req.params.id);
-
-      // const deleteCart = cartService.delete()
       res.send({ message: "Remove successfully" });
     } catch (err) {
       console.log(err);
@@ -84,10 +80,8 @@ class CartController {
   }
   async deleteAll(req, res) {
     try {
-      console.log("idUser", req.params.id);
       const cartService = new CartService(MongoDB.client);
       const cart = await cartService.deleteAllCart(req.params.id);
-      // console.log(cart);
       res.send({ message: "Remove successfully" });
     } catch (err) {
       console.log(err);

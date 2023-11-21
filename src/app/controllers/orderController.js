@@ -7,6 +7,8 @@ const ProductService = require("../services/productService");
 const MongoDB = require("../util/mongodb");
 const ImageService = require("../services/imageService");
 class OrderController {
+
+  // tạo 1 hóa đơn
   async addOrder(req, res) {
     try {
       const { idUser, dayOrder, status, orderDetails } = req.body;
@@ -42,6 +44,7 @@ class OrderController {
       console.log(err);
     }
   }
+  // hiện hóa đợn
   async showOrder(req, res) {
     try {
       const orderService = new OrderService(MongoDB.client);
@@ -81,6 +84,7 @@ class OrderController {
       console.log(err);
     }
   }
+  // xác nhận đơn 
   async update(req, res) {
     if ((Object.keys(req.body).length = 0)) {
       res.send(req.body, { mesaage: "Data to update can not be empty" });
@@ -95,6 +99,7 @@ class OrderController {
       console.log(err);
     }
   }
+  // hiện những sản phẩm của hóa đơn 
   async showProductOrder(req, res) {
     try { 
       const productService = new ProductService(MongoDB.client);

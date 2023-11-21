@@ -3,11 +3,12 @@ const ProductService = require("../services/productService");
 const ImageService = require("../services/imageService");
 const Product = require("../models/productModel");
 const Image = require("../models/imgModel");
-const config = require("../config")
+const config = require("../config");
 const category = require("../models/categoryModel");
 const MongoDB = require("../util/mongodb");
 
 class categoryController {
+  // hiện danh sách các loại sản phẩm
   show(req, res) {
     try {
       const categoryService = new caterogyService(MongoDB.client);
@@ -32,7 +33,7 @@ class categoryController {
       console.log(err);
     }
   }
-
+  // tạo một loại sản phẩm mới
   async create(req, res) {
     var message = [];
     const img = req.files.img;
@@ -56,10 +57,8 @@ class categoryController {
           const result = await categoryService.addCate(newCategory);
           message = "Them loai san pham moi thanh cong";
           res.send(message);
-         const filePath = config.filePath.product + img.name;
-         img.mv(filePath)
-
-
+          const filePath = config.filePath.product + img.name;
+          img.mv(filePath);
         }
         res.send(result);
       }
@@ -67,7 +66,7 @@ class categoryController {
       console.log(err);
     }
   }
-
+  // thêm sản phẩm theo loại
   async addProduct(req, res) {
     var message = "";
     try {
@@ -85,23 +84,20 @@ class categoryController {
         });
         const productService = new ProductService(MongoDB.client);
         const result = await productService.addProduct(newProduct);
-        const filePath =
-          config.filePath.product +
-          imgProduct.name;
+        const filePath = config.filePath.product + imgProduct.name;
         imgProduct.mv(filePath);
         if (result.value._id) {
           const newImage = new Image({
             nameProduct: result.value._id,
             name: imgProduct.name,
           });
+          // cập nhật lại hình ảnh sau khi thêm sản phâm
           const imageService = new ImageService(MongoDB.client);
           const img = await imageService.create(newImage);
           newProduct.image = img.value._id;
           await productService.updateProduct(result.value._id, newProduct);
         }
-
-        console.log("Product added successfully");
-        message = "Thêm sản phẩm tành công"
+        message = "Thêm sản phẩm tành công";
         res.send(message);
       } else {
         res.status(404).json({ message: "khong co loai san pham nay" });

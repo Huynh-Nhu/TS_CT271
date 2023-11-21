@@ -7,7 +7,7 @@ const { response } = require("express");
 const validator = require('validator')
 
 class RegisterController {
- 
+  // tạo tài khoản cho người dùng
   async create(req, res, next) {
     var message = "";
 

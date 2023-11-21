@@ -5,6 +5,7 @@ const config = require("../config")
 const Connect = require("../models/connectModel");
 
 class ConnectController {
+  // tạo đánh giá cuả khách hàng
   async createConnect(req, res) {
     let fileImages = [];
     let imageNames = [];
@@ -34,10 +35,12 @@ class ConnectController {
     // luu anh vao thu muc
     const filePath =
       config.filePath.comment;
-    // Trong mỗi vòng lặp, lấy tệp tin ảnh từ fileImages[i] vào biến imageFile và lấy tên tệp tin từ imageNames[i] vào biến filename.
+    // Trong mỗi vòng lặp, lấy tệp tin ảnh từ fileImages[i] vào biến imageFile
+    // và lấy tên tệp tin từ imageNames[i] vào biến filename.
     for (let i = 0; i < fileImages.length; i++) {
       const imageFile = fileImages[i];
       const filename = imageNames[i];
+      //Tạo đường dẫn đích cho tệp tin ảnh bằng cách kết hợp filePath và filename trong biến fileDestPath.
       const fileDestPath = filePath + filename;
 
       await imageFile.mv(fileDestPath);
@@ -45,7 +48,7 @@ class ConnectController {
 
     res.send({ message: "gửi thành công" });
   }
-
+  // hiện những đánh giá của khách hàng
   async showConnect(req, res) {
     const connectService = new ConnectService(MongoDB.client);
     const connects = await connectService.getConnectAll();

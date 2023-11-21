@@ -3,7 +3,7 @@ const UserService = require('../services/userService');
 const MongoDB = require('../util/mongodb');
 
 class UserController {
-
+    // lấy ra danh sách người dùng
     ListUsers(req,res){
         try{
             const userService = new UserService(MongoDB.client);

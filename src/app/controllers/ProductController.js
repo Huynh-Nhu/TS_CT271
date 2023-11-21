@@ -9,6 +9,7 @@ const path = require("path");
 const config = require("../config")
 
 class ProductController {
+  // hiện danh sách sản phẩm 
   show(req, res) {
     try {
       const productService = new ProductService(MongoDB.client);
@@ -23,6 +24,7 @@ class ProductController {
       console.log(err);
     }
   }
+  // hiện hình ảnh của san sản phâmr đó
   showImage(req, res) {
     try {
       const imageService = new ImageService(MongoDB.client);
@@ -37,7 +39,7 @@ class ProductController {
       console.log(err);
     }
   }
-
+  // lấy ra 1 sản phẩm và hình ảnh của sản phẩm đó
   async getOneProduct(req, res) {
     try {
       const productService = new ProductService(MongoDB.client);
@@ -54,7 +56,7 @@ class ProductController {
       console.log(err);
     }
   }
-
+  // cập nhật sản phẩm 
   async update(req, res) {
     if ((Object.keys(req.body).length = 0)) {
       res.send(req.body, { mesaage: "Data to update can not be empty" });
@@ -110,7 +112,7 @@ class ProductController {
       console.log("loi", err);
     }
   }
-
+  // cập nhật lại hình ảnh của sản phẩm
   async updateImage(req, res) {
     if ((Object.keys(req.body).length = 0)) {
       res.send(req.body, { mesaage: "Data to update can not be empty" });
@@ -138,7 +140,7 @@ class ProductController {
       console.log(err);
     }
   }
-
+  // xóa sản phẩm (thay đổi trang thái của sản phẩm )
   async deleteProduct(req, res) {
     try {
       const productService = new ProductService(MongoDB.client);

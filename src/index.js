@@ -40,7 +40,7 @@ app.use(morgan('combined'));
 
 //khởi tạo tuyến đương
 route(app);
-
+// middleware xử lý lỗi
 app.use((req,res, next) => {
   return next(new ApiError(400, "Resource not found"));
 })
